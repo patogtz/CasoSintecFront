@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
+
 import { makeStyles } from "@material-ui/core/styles";
+
 import {
   Table,
   TableBody,
@@ -7,11 +9,20 @@ import {
   TableContainer,
   TableHead,
   TableRow,
-  Paper
+  Paper,
+  IconButton
 } from "@material-ui/core";
+import AppBar from "@material-ui/core/AppBar";
+import Toolbar from "@material-ui/core/Toolbar";
+
+import Typography from "@material-ui/core/Typography";
 import EditIcon from "@material-ui/icons/Edit";
 import DeleteIcon from "@material-ui/icons/Delete";
+import AddIcon from "@material-ui/icons/Add";
+
 import EditProduct from "./EditProduct";
+import DeleteProduct from "./DeleteProduct";
+
 const useStyles = makeStyles({
   table: {
     minWidth: 650
@@ -22,8 +33,11 @@ export default function SimpleTable() {
   const classes = useStyles();
   const [products, setProducts] = useState([]);
   const [currentProduct, setCurrentProduct] = useState({});
-  const [currentIndex, setCurrentIndex] = useState(0)
+  const [currentID, setCurrentID] = useState("");
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+
   useEffect(() => {
     fetch("http://localhost:3000/products")
       .then(response => {
@@ -36,19 +50,30 @@ export default function SimpleTable() {
   const toggleEditModal = () => {
     setShowEditModal(!showEditModal);
   };
-  const handleEditClick = (id: string, row: any, index: number) => {
+
+  const toggleDeleteModal = () => {
+    setShowDeleteModal(!showDeleteModal);
+  };
+  const handleEditClick = (row: any, index: number) => {
     setCurrentProduct(row);
-    setCurrentIndex(index)
+    setCurrentIndex(index);
     setShowEditModal(true);
-    console.log(products)
-};
-  const handledDeleteClick = (id: string) => {
+    console.log(products);
+  };
+
+  const handleDeleteClick = (id: string, index: number) => {
+    setCurrentID(id);
+    setCurrentIndex(index);
+    setShowDeleteModal(true);
     console.log(id);
   };
+
+  
   return (
     //Edit product modal
     <div>
-      {Object.entries(currentProduct).length === 0 && currentProduct.constructor === Object ? (
+      {Object.entries(currentProduct).length === 0 &&
+      currentProduct.constructor === Object ? (
         <></>
       ) : (
         <EditProduct
@@ -61,7 +86,27 @@ export default function SimpleTable() {
         />
       )}
 
+      {currentID === "" ? (
+        <></>
+      ) : (
+        <DeleteProduct
+          toggleOpen={toggleDeleteModal}
+          open={showDeleteModal}
+          product={currentID}
+          products={products}
+          index={currentIndex}
+          setNewProducts={setProducts}
+        />
+      )}
+
       <TableContainer component={Paper}>
+        <AppBar position="static" color="primary">
+          <Toolbar>
+            <Typography variant="h6" color="inherit">
+              Sintec
+            </Typography>
+          </Toolbar>
+        </AppBar>
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
@@ -81,25 +126,31 @@ export default function SimpleTable() {
                 <TableCell align="left">{row["fechaAlta"]}</TableCell>
                 <TableCell align="left">{row["descripcion"]}</TableCell>
                 <TableCell align="left">
-                  <EditIcon
-                    onClick={() => {
-                      handleEditClick(row["_id"], row, index);
-                    }}
-                  />
+                  <IconButton>
+                    <EditIcon
+                      onClick={() => {
+                        handleEditClick(row, index);
+                      }}
+                    />
+                  </IconButton>
                 </TableCell>
                 <TableCell align="left">
-                  <DeleteIcon
-                    onClick={() => {
-                      setCurrentProduct(row);
-                      handledDeleteClick(row["_id"]);
-                    }}
-                  />
+                  <IconButton>
+                    <DeleteIcon
+                      onClick={() => {
+                        handleDeleteClick(row["_id"], index);
+                      }}
+                    />
+                  </IconButton>
                 </TableCell>
               </TableRow>
             ))}
           </TableBody>
         </Table>
       </TableContainer>
+      <IconButton style={{ float: "right", marginTop: "5px" }} aria-label="add" onClick={}>
+        <AddIcon />
+      </IconButton>
     </div>
   );
 }
