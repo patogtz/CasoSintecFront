@@ -22,22 +22,28 @@ import AddIcon from "@material-ui/icons/Add";
 
 import EditProduct from "./EditProduct";
 import DeleteProduct from "./DeleteProduct";
-
+import AddProduct from "./AddProduct";
 const useStyles = makeStyles({
   table: {
     minWidth: 650
   }
 });
+interface product {
+  _id: string;
+  nombre: string;
+  fechaAlta: string;
+  descripcion: string;
+}
 
 export default function SimpleTable() {
   const classes = useStyles();
-  const [products, setProducts] = useState([]);
-  const [currentProduct, setCurrentProduct] = useState({});
-  const [currentID, setCurrentID] = useState("");
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [showEditModal, setShowEditModal] = useState(false);
-  const [showDeleteModal, setShowDeleteModal] = useState(false);
-
+  const [products, setProducts] = useState<product[]>([]);
+  const [currentProduct, setCurrentProduct] = useState<product | any>({});
+  const [currentID, setCurrentID] = useState<string>("");
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [showEditModal, setShowEditModal] = useState<boolean>(false);
+  const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
+  const [showAddModal, setShowAddModal] = useState<boolean>(false);
   useEffect(() => {
     fetch("http://localhost:3000/products")
       .then(response => {
@@ -54,7 +60,11 @@ export default function SimpleTable() {
   const toggleDeleteModal = () => {
     setShowDeleteModal(!showDeleteModal);
   };
-  const handleEditClick = (row: any, index: number) => {
+  const toggleAddModal = () => {
+    setShowAddModal(!showAddModal);
+  };
+
+  const handleEditClick = (row: product, index: number) => {
     setCurrentProduct(row);
     setCurrentIndex(index);
     setShowEditModal(true);
@@ -68,7 +78,10 @@ export default function SimpleTable() {
     console.log(id);
   };
 
-  
+  const handleAddClick = () => {
+    setShowAddModal(true);
+  };
+
   return (
     //Edit product modal
     <div>
@@ -99,6 +112,13 @@ export default function SimpleTable() {
         />
       )}
 
+      <AddProduct
+        toggleOpen={toggleAddModal}
+        open={showAddModal}
+        products={products}
+        setNewProducts={setProducts}
+      />
+
       <TableContainer component={Paper}>
         <AppBar position="static" color="primary">
           <Toolbar>
@@ -118,7 +138,7 @@ export default function SimpleTable() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {products.map((row, index: number) => (
+            {products.map((row: product, index: number) => (
               <TableRow key={row["_id"]}>
                 <TableCell component="th" scope="row">
                   {row["nombre"]}
@@ -126,21 +146,21 @@ export default function SimpleTable() {
                 <TableCell align="left">{row["fechaAlta"]}</TableCell>
                 <TableCell align="left">{row["descripcion"]}</TableCell>
                 <TableCell align="left">
-                  <IconButton>
-                    <EditIcon
-                      onClick={() => {
-                        handleEditClick(row, index);
-                      }}
-                    />
+                  <IconButton
+                    onClick={() => {
+                      handleEditClick(row, index);
+                    }}
+                  >
+                    <EditIcon />
                   </IconButton>
                 </TableCell>
                 <TableCell align="left">
-                  <IconButton>
-                    <DeleteIcon
-                      onClick={() => {
-                        handleDeleteClick(row["_id"], index);
-                      }}
-                    />
+                  <IconButton
+                    onClick={() => {
+                      handleDeleteClick(row["_id"], index);
+                    }}
+                  >
+                    <DeleteIcon />
                   </IconButton>
                 </TableCell>
               </TableRow>
@@ -148,7 +168,13 @@ export default function SimpleTable() {
           </TableBody>
         </Table>
       </TableContainer>
-      <IconButton style={{ float: "right", marginTop: "5px" }} aria-label="add" onClick={}>
+      <IconButton
+        style={{ float: "right", marginTop: "5px" }}
+        aria-label="add"
+        onClick={() => {
+          handleAddClick();
+        }}
+      >
         <AddIcon />
       </IconButton>
     </div>
