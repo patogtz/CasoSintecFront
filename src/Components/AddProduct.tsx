@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import Dialog from "@material-ui/core/Dialog";
@@ -69,7 +69,7 @@ export default function EditDialog(params: any) {
         <DialogTitle id="form-dialog-title">Editar Producto</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Llene los campos para agregar un producto.
+            Llene los campos para agregar un nuevo producto.
           </DialogContentText>
           <TextField
             autoFocus

@@ -13,10 +13,10 @@ function Alert(props: AlertProps) {
 }
 
 export default function EditDialog(params: any) {
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
+  const [fecha, setFecha] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   useEffect(() => {
     setName(params.product.nombre);
     setDesc(params.product.descripcion);
@@ -50,7 +50,7 @@ export default function EditDialog(params: any) {
         fechaAlta: fecha
       })
     };
-    fetch("http://localhost:3000/product/" + params.product._id, putRequest)
+    fetch("https://casosintec-back.herokuapp.com/product/" + params.product._id, putRequest)
       .then(resp => {
         console.log(resp);
         let rows = params.products;

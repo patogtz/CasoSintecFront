@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import Button from "@material-ui/core/Button";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
@@ -21,14 +21,12 @@ export default function DeleteDialog(params: any) {
     fetch("https://casosintec-back.herokuapp.com/product/" + params.product, deleteRequest)
       .then(resp => {
         if (resp.status === 200) {
-          console.log(resp);
           let rows = params.products;
           rows.splice(params.index, 1);
           params.setNewProducts(rows);
           params.toggleOpen();
         } else {
           params.toggleOpen();
-          console.log(resp);
         }
       })
   };
@@ -46,8 +44,7 @@ export default function DeleteDialog(params: any) {
         </DialogTitle>
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
-            Let Google help apps determine location. This means sending
-            anonymous location data to Google, even when no apps are running.
+            Esta seguro?
           </DialogContentText>
         </DialogContent>
         <DialogActions>
