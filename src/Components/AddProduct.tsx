@@ -12,10 +12,10 @@ function Alert(props: AlertProps) {
   return <MuiAlert elevation={6} variant="filled" {...props} />;
 }
 export default function EditDialog(params: any) {
-  const [name, setName] = useState("");
-  const [desc, setDesc] = useState("");
-  const [fecha, setFecha] = useState("");
-  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [name, setName] = useState<string>("");
+  const [desc, setDesc] = useState<string>("");
+  const [fecha, setFecha] = useState<string>("");
+  const [openSnackbar, setOpenSnackbar] = useState<boolean>(false);
   const handleClose = () => {
     params.toggleOpen();
   };
@@ -44,10 +44,16 @@ export default function EditDialog(params: any) {
         delete data.result["__v"];
         rows.push(data.result);
         params.setNewProducts(rows);
+        setName("")
+        setDesc("")
+        setFecha("")
         params.toggleOpen();
       });
   };
   const handleCloseSnackBar = () => {
+    setName("")
+    setDesc("")
+    setFecha("")
     setOpenSnackbar(false);
   };
   return (
@@ -66,7 +72,7 @@ export default function EditDialog(params: any) {
         onClose={handleClose}
         aria-labelledby="form-dialog-title"
       >
-        <DialogTitle id="form-dialog-title">Editar Producto</DialogTitle>
+        <DialogTitle id="form-dialog-title">Agregar Producto</DialogTitle>
         <DialogContent>
           <DialogContentText>
             Llene los campos para agregar un nuevo producto.

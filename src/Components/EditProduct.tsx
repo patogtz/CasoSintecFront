@@ -24,6 +24,9 @@ export default function EditDialog(params: any) {
   }, []);
 
   const handleClose = () => {
+    setName(params.product.nombre)
+    setDesc(params.product.descripcion);
+    setFecha(params.product.fechaAlta);
     params.toggleOpen();
   };
 
