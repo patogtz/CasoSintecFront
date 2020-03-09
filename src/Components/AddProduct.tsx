@@ -6,17 +6,25 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
-
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 export default function EditDialog(params: any) {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [fecha, setFecha] = useState("");
-
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   const handleClose = () => {
     params.toggleOpen();
   };
 
   const handleSave = () => {
+    if (name === "" || fecha === "" || desc === "") {
+      setOpenSnackbar(true);
+      return;
+    }
     let postRequest = {
       method: "POST",
       headers: {
@@ -28,7 +36,7 @@ export default function EditDialog(params: any) {
         fechaAlta: fecha
       })
     };
-    fetch("http://localhost:3000/product", postRequest)
+    fetch("https://casosintec-back.herokuapp.com/product", postRequest)
       .then((resp: any) => resp.json())
       .then((data: any) => {
         console.log(data.result);
@@ -39,9 +47,20 @@ export default function EditDialog(params: any) {
         params.toggleOpen();
       });
   };
-
+  const handleCloseSnackBar = () => {
+    setOpenSnackbar(false);
+  };
   return (
     <div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackBar}
+      >
+        <Alert onClose={handleCloseSnackBar} severity="error">
+          Porfavor llena todos los campos o modifica alguno de ellos.
+        </Alert>
+      </Snackbar>
       <Dialog
         open={params.open}
         onClose={handleClose}

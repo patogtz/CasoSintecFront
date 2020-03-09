@@ -6,11 +6,17 @@ import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert, { AlertProps } from "@material-ui/lab/Alert";
+function Alert(props: AlertProps) {
+  return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
 
 export default function EditDialog(params: any) {
   const [name, setName] = useState("");
   const [desc, setDesc] = useState("");
   const [fecha, setFecha] = useState("");
+  const [openSnackbar, setOpenSnackbar] = useState(false);
   useEffect(() => {
     setName(params.product.nombre);
     setDesc(params.product.descripcion);
@@ -22,6 +28,17 @@ export default function EditDialog(params: any) {
   };
 
   const handleSave = () => {
+    if (
+      (name === params.product.nombre &&
+        desc === params.product.descripcion &&
+        fecha === params.product.fechaAlta) ||
+      name === "" ||
+      fecha === "" ||
+      desc === ""
+    ) {
+      setOpenSnackbar(true);
+      return;
+    }
     let putRequest = {
       method: "PUT",
       headers: {
@@ -33,24 +50,36 @@ export default function EditDialog(params: any) {
         fechaAlta: fecha
       })
     };
-    fetch(
-      "http://localhost:3000/product/" + params.product._id,
-      putRequest
-    ).then(resp => {
-      console.log(resp);
-      let rows = params.products;
-      rows[params.index]["nombre"] = name;
-      rows[params.index]["descripcion"] = desc;
-      rows[params.index]["fechaAlta"] = fecha;
-      params.setNewProducts(rows);
-      params.toggleOpen();
-    }).catch(err => {
-        console.log(err)
-    });
+    fetch("http://localhost:3000/product/" + params.product._id, putRequest)
+      .then(resp => {
+        console.log(resp);
+        let rows = params.products;
+        rows[params.index]["nombre"] = name;
+        rows[params.index]["descripcion"] = desc;
+        rows[params.index]["fechaAlta"] = fecha;
+        params.setNewProducts(rows);
+        params.toggleOpen();
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  };
+
+  const handleCloseSnackBar = () => {
+    setOpenSnackbar(false);
   };
 
   return (
     <div>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackBar}
+      >
+        <Alert onClose={handleCloseSnackBar} severity="error">
+          Porfavor llena todos los campos o modifica alguno de ellos.
+        </Alert>
+      </Snackbar>
       <Dialog
         open={params.open}
         onClose={handleClose}
@@ -84,7 +113,7 @@ export default function EditDialog(params: any) {
             margin="dense"
             id="fechaAlta"
             label="Fecha de Alta"
-            type="text"
+            type="string"
             value={fecha}
             onChange={event => setFecha(event.target.value)}
             fullWidth

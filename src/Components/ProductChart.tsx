@@ -45,7 +45,7 @@ export default function SimpleTable() {
   const [showDeleteModal, setShowDeleteModal] = useState<boolean>(false);
   const [showAddModal, setShowAddModal] = useState<boolean>(false);
   useEffect(() => {
-    fetch("http://localhost:3000/products")
+    fetch("https://casosintec-back.herokuapp.com/products")
       .then(response => {
         return response.json();
       })
@@ -130,11 +130,12 @@ export default function SimpleTable() {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>Nombre</TableCell>
-              <TableCell align="left">Descripcion</TableCell>
-              <TableCell align="left">Fecha de Alta</TableCell>
-              <TableCell align="left">Editar</TableCell>
-              <TableCell align="left">Borrar</TableCell>
+              <TableCell><b>Nombre</b></TableCell>
+              <TableCell align="left"> <b>Fecha de Alta</b></TableCell>
+
+              <TableCell align="left"><b>Descripcion</b></TableCell>
+              <TableCell align="left"><b>Editar</b></TableCell>
+              <TableCell align="left"><b>Borrar</b></TableCell>
             </TableRow>
           </TableHead>
           <TableBody>

@@ -18,7 +18,7 @@ export default function DeleteDialog(params: any) {
         "Content-type": "application/json; charset=UTF-8"
       }
     };
-    fetch("http://localhost:3000/product/" + params.product, deleteRequest)
+    fetch("https://casosintec-back.herokuapp.com/product/" + params.product, deleteRequest)
       .then(resp => {
         if (resp.status === 200) {
           console.log(resp);
