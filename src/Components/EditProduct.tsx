@@ -116,10 +116,13 @@ export default function EditDialog(params: any) {
             margin="dense"
             id="fechaAlta"
             label="Fecha de Alta"
-            type="string"
+            type="date"
             value={fecha}
             onChange={event => setFecha(event.target.value)}
             fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
           />
         </DialogContent>
         <DialogActions>

@@ -130,17 +130,34 @@ export default function SimpleTable() {
         <Table className={classes.table} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell><b>Nombre</b></TableCell>
-              <TableCell align="left"> <b>Fecha de Alta</b></TableCell>
+              <TableCell>
+                <b>#</b>
+              </TableCell>
+              <TableCell>
+                <b>Nombre</b>
+              </TableCell>
+              <TableCell align="left">
+                {" "}
+                <b>Fecha de Alta</b>
+              </TableCell>
 
-              <TableCell align="left"><b>Descripcion</b></TableCell>
-              <TableCell align="left"><b>Editar</b></TableCell>
-              <TableCell align="left"><b>Borrar</b></TableCell>
+              <TableCell align="left">
+                <b>Descripcion</b>
+              </TableCell>
+              <TableCell align="left">
+                <b>Editar</b>
+              </TableCell>
+              <TableCell align="left">
+                <b>Borrar</b>
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {products.map((row: product, index: number) => (
               <TableRow key={row["_id"]}>
+                <TableCell component="th" scope="row">
+                  {index + 1}
+                </TableCell>
                 <TableCell component="th" scope="row">
                   {row["nombre"]}
                 </TableCell>
